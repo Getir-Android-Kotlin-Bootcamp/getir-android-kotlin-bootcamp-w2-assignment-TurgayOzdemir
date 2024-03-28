@@ -183,4 +183,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapLon
         }
 
     }
+
+    fun onSearchIcon(view: View){
+        val locationSearch = binding.searchText.text.toString()
+        val geocoder = Geocoder(this)
+        try {
+            val addressList = geocoder.getFromLocationName(locationSearch, 1)
+            if (addressList!!.isNotEmpty()) {
+                val address = addressList[0]
+                val latLng = LatLng(address.latitude, address.longitude)
+                mMap.addMarker(MarkerOptions().position(latLng).title(locationSearch))
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10f))
+            } else {
+                Toast.makeText(this, "Adres bulunamadı", Toast.LENGTH_SHORT).show()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
 }
